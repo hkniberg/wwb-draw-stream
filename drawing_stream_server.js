@@ -34,6 +34,7 @@ function startDrawingStreamServer() {
 function startWebSocketServer(port) {
   console.assert(port, "port missing!")
 
+  var fs = require('fs');
   var privateKey  = fs.readFileSync('keys/key.pem', 'utf8');
   var certificate = fs.readFileSync('keys/cert.pem', 'utf8');
 
