@@ -7,7 +7,7 @@ const WebSocket = require('ws');
 
 console.log("Sending hello to " + host + ":" + port)
 
-const ws = new WebSocket('ws://' + host + ':' + port)
+const ws = new WebSocket('wss://' + host + ':' + port)
 
 ws.on('open', function open() {
   ws.send('hello');

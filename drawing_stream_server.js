@@ -34,9 +34,22 @@ function startDrawingStreamServer() {
 function startWebSocketServer(port) {
   console.assert(port, "port missing!")
 
+  var privateKey  = fs.readFileSync('keys/key.pem', 'utf8');
+  var certificate = fs.readFileSync('keys/cert.pem', 'utf8');
+
+  var credentials = {key: privateKey, cert: certificate};
+  var express = require('express');
+  var app = express();
+
+  //... bunch of other express stuff here ...
+
+  //pass in your express app and credentials to create an https server
+  var httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(port);
+
   const WebSocket = require('ws');
 
-  const webSocketServer = new WebSocket.Server({ port: port });
+  const webSocketServer = new WebSocket.Server({ server: httpsServer });
   console.log("Drawing stream server listening on port " + port)
 
   webSocketServer.on('connection', function connection(webSocket) {
