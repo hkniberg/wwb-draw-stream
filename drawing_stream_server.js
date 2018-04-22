@@ -23,8 +23,8 @@ function startDrawingStreamServer() {
   const port = process.env.DRAWING_STREAM_PORT
   console.assert(port, "DRAWING_STREAM_PORT env variable must be set")
   */
-  const port = process.env.PORT
-  console.assert(port, "process.env.PORT env variable must be set")
+  const port = process.env.DRAW_PORT
+  console.assert(port, "process.env.DRAW_PORT env variable must be set")
 
   startWebSocketServer(port)
   initRedis()
