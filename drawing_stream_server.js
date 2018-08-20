@@ -25,6 +25,7 @@ function startDrawingStreamServer() {
   */
   const port = process.env.DRAW_PORT
   console.assert(port, "process.env.DRAW_PORT env variable must be set")
+  console.log("Draw port: ", port)
 
   startWebSocketServer(port)
   initRedis()
@@ -35,23 +36,24 @@ function startWebSocketServer(port) {
   console.assert(port, "port missing!")
 
   var fs = require('fs');
-  var https = require('https')
-  var privateKey  = fs.readFileSync('keys/key.pem', 'utf8');
-  var certificate = fs.readFileSync('keys/cert.pem', 'utf8');
+  var http = require('http')
+  //var privateKey  = fs.readFileSync('keys/key.pem', 'utf8');
+  //var certificate = fs.readFileSync('keys/cert.pem', 'utf8');
 
-  var credentials = {key: privateKey, cert: certificate};
+  //var credentials = {key: privateKey, cert: certificate};
   var express = require('express');
   var app = express();
 
   //... bunch of other express stuff here ...
 
   //pass in your express app and credentials to create an https server
-  var httpsServer = https.createServer(credentials, app);
-  httpsServer.listen(port);
+  var httpServer = http.createServer({}, app);
+
+  httpServer.listen(port);
 
   const WebSocket = require('ws');
 
-  const webSocketServer = new WebSocket.Server({ server: httpsServer });
+  const webSocketServer = new WebSocket.Server({ server: httpServer });
   console.log("Drawing stream server listening on port " + port)
 
   webSocketServer.on('connection', function connection(webSocket) {
