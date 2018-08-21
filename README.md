@@ -18,6 +18,8 @@ docker run --env-file env.list -p 3003:3003 -p 3004:3004 --network wwb-net wwb-s
 
 # Environment variables that should be set
 
+HEALTH_PORT = 3002
+
 TEXT_PORT = 3003
 
 DRAW_PORT = 3004
