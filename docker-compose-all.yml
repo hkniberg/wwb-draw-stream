@@ -1,11 +1,15 @@
 version: '3'
-
-networks:
-  default:
-    external:
-      name: wwb
-
 services:
+
+  mongo:
+    image: "mongo"
+    ports:
+     - "27017:27017"
+
+  redis:
+    image: "redis"
+    ports:
+     - "6379:6379"
 
   wwb-stream:
     build: .
@@ -13,6 +17,9 @@ services:
      - "3002:3002"
      - "3003:3003"
      - "3004:3004"
+    depends_on:
+     - mongo
+     - redis
     environment:
      - HEALTH_PORT=3002
      - TEXT_PORT=3003
