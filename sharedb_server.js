@@ -29,7 +29,7 @@ function initShareDb() {
   const wss = new WebSocket.Server({ port: port })
 
   wss.on('connection', function(wsConnection) {
-    console.log("Got ws connection!")
+    //console.log("Got ws connection!")
     var stream = new WebSocketJSONStream(wsConnection);
 
     wsConnection.on('error', function(err) {
@@ -50,7 +50,7 @@ function initShareDb() {
 
 
     share.listen(stream)
-    console.log("sharedb listening")
+    //console.log("sharedb listening")
   })
 
 

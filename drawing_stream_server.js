@@ -66,18 +66,18 @@ function startWebSocketServer(port) {
 }
 
 function messageReceivedFromClient(webSocket, messageString) {
-  console.log('messageReceivedFromClient at ' + webSocket._socket.remoteAddress, messageString);
+  //console.log('messageReceivedFromClient at ' + webSocket._socket.remoteAddress, messageString);
   if (messageString == "hello") {
-    console.log("Got hello. Returning world.")
+    //console.log("Got hello. Returning world.")
     webSocket.send("world")
     return
   }
 
   try {
     const message = JSON.parse(messageString)
-    console.log("action is ", message.action)
+    //console.log("action is ", message.action)
     if (message.action == "listenToWhiteboard") {
-      console.log("Drawing stream server got listenToWhiteboard message", message)
+      //console.log("Drawing stream server got listenToWhiteboard message", message)
       console.assert(message.whiteboardId, "Message is missing whiteboardId")
       clients.push({whiteboardId: message.whiteboardId, webSocket: webSocket, clientId: message.clientId})
       removeClientWhenWebSocketIsClosed(webSocket)
@@ -91,23 +91,23 @@ function messageReceivedFromClient(webSocket, messageString) {
 
 function removeClientWhenWebSocketIsClosed(webSocket) {
   webSocket.addEventListener('close', function() {
-    console.log("onClose. Clients before: " + clients.length)
+    //console.log("onClose. Clients before: " + clients.length)
     clients = clients.filter((client) => {
       return client.webSocket != webSocket
     })
-    console.log("clients after: " + clients.length)
+    //console.log("clients after: " + clients.length)
   })
 }
 
 function messageReceivedFromRedis(channel, messageString) {
   const message = JSON.parse(messageString)
-  console.log("messageReceivedFromRedis: " + channel,  message);
+  //console.log("messageReceivedFromRedis: " + channel,  message);
   clients.forEach((client) => {
     if (message.clientId != client.clientId) {
-      console.log("Sending it to client " + client.clientId)
+      //console.log("Sending it to client " + client.clientId)
       client.webSocket.send(messageString)
     } else {
-      console.log("NOT sending it to client " + client.clientId + " (since the message came from that client)")
+      //console.log("NOT sending it to client " + client.clientId + " (since the message came from that client)")
     }
   })
 }
