@@ -17,6 +17,7 @@ services:
      - HEALTH_PORT=3002
      - TEXT_PORT=3003
      - DRAW_PORT=3004
+     - DRAW_LOGGING=true
      - REDIS_URL=redis://redis:6379
      - MONGO_URL=mongodb://mongo:27017/wwb
 

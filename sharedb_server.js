@@ -1,8 +1,11 @@
+const redisUtil = require("./redis-util")
+
 function initShareDb() {
   const ShareDB = require('sharedb');
 
   const mongoUrl = process.env.MONGO_URL
   console.assert(mongoUrl, "MONGO_URL must be set")
+  console.log("Using mongoUrl", mongoUrl)
 
   const db = require('sharedb-mongo')(mongoUrl);
 
@@ -12,7 +15,11 @@ function initShareDb() {
   console.assert(redisUrl, "REDIS_URL must be set")
 
   const redisOptions = {url: redisUrl}
-  const pubsub = require('sharedb-redis-pubsub')(redisOptions); // Redis client being an existing redis client connection
+  
+  const pubsub = require('sharedb-redis-pubsub')(redisOptions);
+
+  redisUtil.watchRedisClientAndCatchErrors(pubsub.client, "ShareDb PubSub client")
+  redisUtil.watchRedisClientAndCatchErrors(pubsub.observer, "ShareDb PubSub observer")
 
   const share = new ShareDB({db, pubsub});
 
