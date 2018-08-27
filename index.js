@@ -13,7 +13,7 @@ console.assert(healthPort, "process.env.HEALTH_PORT env variable must be set")
 
 var http = require('http');
 http.createServer(function (req, res) {
-  res.write('www-stream works fine!'); //write a response to the client
+  res.write('www-stream works fine!!'); //write a response to the client
   res.end(); //end the response
 }).listen(healthPort); //the server object listens on port 8080
 
