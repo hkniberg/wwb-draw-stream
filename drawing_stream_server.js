@@ -65,7 +65,7 @@ function startWebSocketServer(port) {
   console.log("Drawing stream server listening on port " + port)
 
   webSocketServer.on('connection', function connection(webSocket) {
-    console.log("A client connected to the drawing stream websocket")
+    if (log) console.log("A client connected to the drawing stream websocket")
 
     webSocket.on('message', function(messageString) {
       messageReceivedFromClient(webSocket, messageString)
@@ -74,7 +74,8 @@ function startWebSocketServer(port) {
 }
 
 function messageReceivedFromClient(webSocket, messageString) {
-  if (log) console.log('messageReceivedFromClient at ' + webSocket._socket.remoteAddress, messageString);
+  const message = JSON.parse(messageString)
+  if (log) console.log('messageReceivedFromClient at ' + webSocket._socket.remoteAddress + "\n", message);
   if (messageString == "hello") {
     //console.log("Got hello. Returning world.")
     webSocket.send("world")
@@ -95,8 +96,19 @@ function messageReceivedFromClient(webSocket, messageString) {
       console.assert(message.whiteboardId, "Message is missing whiteboardId")
       stopListeningToWhiteboard(message.clientId, message.whiteboardId)
 
-    } else {
+    } else if (message.action == "addDoodle") {
       publishMessageToRedis(message)
+
+    } else if (message.action == "removeDoodle") {
+      publishMessageToRedis(message)
+
+    } else if (message.action == "clearDoodles") {
+      publishMessageToRedis(message)
+
+    } else {
+      console.log("Received invalid message action: " + messageString)
+
+      throw new Error("Invalid action: " + message.action + " in message " + messageString)
     }
   } catch (err) {
     console.log("Something went wrong while processing message from client", messageString, err)
@@ -129,7 +141,7 @@ function removeClientWhenWebSocketIsClosed(webSocket) {
 
 function messageReceivedFromRedis(channel, messageString) {
   const message = JSON.parse(messageString)
-  if (log) console.log("messageReceivedFromRedis: " + channel,  message);
+  if (log) console.log("messageReceivedFromRedis: " + channel + "\n",  message);
   clients.forEach((client) => {
     if (message.clientId != client.clientId) {
       if (message.whiteboardId == client.whiteboardId) {
