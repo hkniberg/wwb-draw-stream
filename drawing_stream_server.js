@@ -146,7 +146,11 @@ function messageReceivedFromRedis(channel, messageString) {
     if (message.clientId != client.clientId) {
       if (message.whiteboardId == client.whiteboardId) {
         if (log) console.log("Sending it to client " + client.clientId)
-        client.webSocket.send(messageString)
+        try {
+          client.webSocket.send(messageString)
+        } catch (err) {
+          console.log("Failed to send message to client " + client.clientId + ". Ignoring it. " + err)
+        }
       } else {
         if (log) console.log("NOT sending it to client " + client.clientId + " (since it's a different whiteboard)")
       }
